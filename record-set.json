@@ -1,0 +1,19 @@
+{
+  "Comment": "Create CNAME record for sim.sudharsan17.online",
+  "Changes": [
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "sim.sudharsan17.online",
+        "Type": "CNAME",
+        "TTL": 300,
+        "ResourceRecords": [
+          {
+            "Value": "zenpulse-live.s3-website-us-east-1.amazonaws.com"
+          }
+        ]
+      }
+    }
+  ]
+}
+
