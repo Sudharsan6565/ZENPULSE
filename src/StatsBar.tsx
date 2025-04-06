@@ -1,52 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import useWebSocketFeed from "./useWebSocketFeed";
 
-interface StatsBarProps {
-  sms: number;
-  email: number;
-  slack: number;
-  pushEvents: any[];
-}
+export default function StatsBar() {
+  const pushEvents = useWebSocketFeed();
 
-const StatsBar: React.FC<StatsBarProps> = ({ sms, email, slack, pushEvents }) => {
-  const handleCSVExport = () => {
-    const rows = pushEvents.map((e: any) => ({
-      timestamp: new Date().toISOString(),
-      channel: 'push',
-      message: JSON.stringify(e.message || e),
-    }));
+  const [smsCount, setSmsCount] = useState(0);
+  const [emailCount, setEmailCount] = useState(0);
+  const [slackCount, setSlackCount] = useState(0);
 
-    const csvContent =
-      'data:text/csv;charset=utf-8,' +
-      ['timestamp,channel,message']
-        .concat(rows.map(r => `${r.timestamp},${r.channel},"${r.message}"`))
-        .join('\n');
+  // Pull updated counts on mount and every push
+  useEffect(() => {
+    const fetchCounts = async () => {
+      const channels = ["sms", "email", "slack"];
+      for (let ch of channels) {
+        try {
+          const res = await fetch(`https://0lt1zwvd1g.execute-api.us-east-1.amazonaws.com/prod/zenpulseNotificationGenerator?channel=${ch}`);
+          const data = await res.json();
+          if (ch === "sms") setSmsCount(data.items.length);
+          if (ch === "email") setEmailCount(data.items.length);
+          if (ch === "slack") setSlackCount(data.items.length);
+        } catch (err) {
+          console.error(`Failed to fetch ${ch} count`, err);
+        }
+      }
+    };
 
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'zenpulse_push_export.csv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+    fetchCounts();
+  }, [pushEvents.length]); // Refresh every time push updates
 
   return (
-    <div className="border-t pt-4 mt-4 text-sm flex items-center justify-between">
-      <div className="space-x-4 text-gray-700">
-        <span>📱 SMS: {sms}</span>
-        <span>📧 Email: {email}</span>
-        <span>💬 Slack: {slack}</span>
-        <span>⚡ Push: {pushEvents.length}</span>
-      </div>
-      <button
-        onClick={handleCSVExport}
-        className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 text-xs"
-      >
-        ⬇️ Export CSV
-      </button>
+    <div className="flex justify-between items-center bg-white text-black p-2 rounded shadow text-sm">
+      <span>📩 SMS: {smsCount}</span>
+      <span>📧 Email: {emailCount}</span>
+      <span>💬 Slack: {slackCount}</span>
+      <span>⚡ Push: {pushEvents.length}</span>
+      <button className="bg-blue-100 px-2 py-1 rounded shadow text-xs">📥 Export CSV</button>
     </div>
   );
-};
-
-export default StatsBar;
+}
 

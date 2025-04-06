@@ -15,7 +15,8 @@ export default function LiveChannelFeed({ channel }: { channel: string }) {
       );
       const data = await res.json();
       const sorted = (data?.items || []).sort(
-        (a: any, b: any) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+        (a: any, b: any) =>
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
       );
       setLogs(sorted.slice(0, 5));
     } catch (err) {
@@ -23,7 +24,6 @@ export default function LiveChannelFeed({ channel }: { channel: string }) {
     }
   };
 
-  // 🔁 Fetch on mount + every 5 seconds
   useEffect(() => {
     fetchData();
     const interval = setInterval(fetchData, 5000);
@@ -31,8 +31,8 @@ export default function LiveChannelFeed({ channel }: { channel: string }) {
   }, [channel]);
 
   return (
-    <div className="bg-white rounded p-2 shadow text-sm h-full overflow-y-auto">
-      <h3 className="text-md font-bold mb-2">
+    <div className="bg-white rounded p-3 shadow text-sm h-full overflow-y-auto border border-zinc-300">
+      <h3 className="text-base font-semibold mb-2 text-black">
         {channel === "sms" && "📱 SMS"}
         {channel === "email" && "📧 Email"}
         {channel === "slack" && "💬 Slack"}
@@ -43,10 +43,12 @@ export default function LiveChannelFeed({ channel }: { channel: string }) {
       ) : (
         logs.map((log, idx) => (
           <div key={idx} className="mb-3 border-b border-dotted pb-2">
-            <div className="text-xs text-gray-600 mb-1">
+            <div className="text-xs text-gray-500 mb-1">
               {new Date(log.timestamp).toLocaleTimeString()}
             </div>
-            <p className="text-xs leading-snug whitespace-pre-wrap">{log.message}</p>
+            <p className="text-sm leading-snug text-gray-900 whitespace-pre-wrap">
+              {log.message.replace(/["]+/g, "")}
+            </p>
           </div>
         ))
       )}
