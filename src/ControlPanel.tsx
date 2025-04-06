@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -44,6 +44,7 @@ const ControlPanel = () => {
 
   return (
     <div className="h-screen flex flex-col justify-between bg-white p-4 border-r text-sm">
+      {/* TOP HEADER */}
       <div>
         <h1 className="text-2xl font-bold mb-1">💠 Zenpulse</h1>
         <p className="mb-4 text-xs">
@@ -51,6 +52,7 @@ const ControlPanel = () => {
           <strong>EventBridge + Lambda + OpenAI</strong>
         </p>
 
+        {/* TYPE CLASS SELECTOR */}
         <label className="block font-semibold">Type</label>
         <select
           className="w-full mb-3 border"
@@ -62,16 +64,18 @@ const ControlPanel = () => {
           <option value="support">Support Ticket</option>
         </select>
 
+        {/* CUSTOMER COUNT */}
         <label className="block font-semibold">Customer Count</label>
         <input
           className="w-full mb-4 border"
           type="number"
           value={customerCount}
-          onChange={(e) => setCustomerCount(e.target.value)}
+          onChange={(e) => setCustomerCount(Number(e.target.value))}
         />
 
+        {/* CHANNELS */}
         <label className="block font-semibold">Channels & Test Inputs</label>
-        <div className="space-y-4">
+        <div className="space-y-4 mt-2">
           {/* SMS */}
           <div>
             <label>
@@ -150,7 +154,7 @@ const ControlPanel = () => {
         </div>
       </div>
 
-      {/* Footer */}
+      {/* FOOTER */}
       <div>
         <button
           className="w-full mt-4 bg-black text-white py-2 rounded hover:bg-gray-800 transition"
@@ -160,9 +164,7 @@ const ControlPanel = () => {
         </button>
         <div className="mt-6 text-xs text-center">
           <p className="mb-1">© 2025 <strong>Serverless LLC</strong></p>
-          <p>
-            Built with 🧠 OpenAI & 🛠️ Native AWS Stack
-          </p>
+          <p>Built with 🧠 OpenAI & 🛠️ Native AWS Stack</p>
         </div>
       </div>
     </div>

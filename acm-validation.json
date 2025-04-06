@@ -1,0 +1,18 @@
+{
+  "Changes": [
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "_1435d9986d5ea80d98e585ffdd7734c9.sim.sudharsan17.online.",
+        "Type": "CNAME",
+        "TTL": 300,
+        "ResourceRecords": [
+          {
+            "Value": "_38216e3219034f1c9f82996a0e0e4a7e.xlfgrmvvlj.acm-validations.aws."
+          }
+        ]
+      }
+    }
+  ]
+}
+

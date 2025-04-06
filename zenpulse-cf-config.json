@@ -1,0 +1,58 @@
+{
+  "CallerReference": "zenpulse-cloudfront-$(date +%s)",
+  "Aliases": {
+    "Quantity": 1,
+    "Items": ["sim.sudharsan17.online"]
+  },
+  "Origins": {
+    "Quantity": 1,
+    "Items": [
+      {
+        "Id": "S3-zenpulse",
+        "DomainName": "zenpulse-live.s3-website-us-east-1.amazonaws.com",
+        "OriginPath": "",
+        "CustomOriginConfig": {
+  "HTTPPort": 80,
+  "HTTPSPort": 443,
+  "OriginProtocolPolicy": "http-only",
+  "OriginSslProtocols": {
+    "Quantity": 3,
+    "Items": ["TLSv1", "TLSv1.1", "TLSv1.2"]
+  }
+}
+      }
+    ]
+  },
+  "DefaultCacheBehavior": {
+    "TargetOriginId": "S3-zenpulse",
+    "ViewerProtocolPolicy": "redirect-to-https",
+    "AllowedMethods": {
+      "Quantity": 2,
+      "Items": ["HEAD", "GET"],
+      "CachedMethods": {
+        "Quantity": 2,
+        "Items": ["HEAD", "GET"]
+      }
+    },
+    "TrustedSigners": {
+      "Enabled": false,
+      "Quantity": 0
+    },
+    "ForwardedValues": {
+      "QueryString": false,
+      "Cookies": {
+        "Forward": "none"
+      }
+    },
+    "MinTTL": 0
+  },
+  "Comment": "Zenpulse HTTPS hosting",
+  "Enabled": true,
+  "ViewerCertificate": {
+    "ACMCertificateArn": "arn:aws:acm:us-east-1:724772090119:certificate/d63178d0-9bd6-412e-994a-04c434f0044e",
+    "SSLSupportMethod": "sni-only",
+    "MinimumProtocolVersion": "TLSv1.2_2021"
+  },
+  "PriceClass": "PriceClass_100"
+}
+

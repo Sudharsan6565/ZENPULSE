@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface LogItem {
   timestamp: string;
@@ -11,7 +11,7 @@ export default function LiveChannelFeed({ channel }: { channel: string }) {
   const fetchData = async () => {
     try {
       const res = await fetch(
-        `https://0lt1zwvd1g.execute-api.us-east-1.amazonaws.com/prod/zenpulseNotificationGenerator?channel=${channel}`
+        `https://0lt1zwvd1g.execute-api.us-east-1.amazonaws.com/prod/zenpulseNotificationGenerator?channel=${channel.toLowerCase()}`
       );
       const data = await res.json();
       const sorted = (data?.items || []).sort(
@@ -26,16 +26,14 @@ export default function LiveChannelFeed({ channel }: { channel: string }) {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 5000);
-    return () => clearInterval(interval);
   }, [channel]);
 
   return (
     <div className="bg-white rounded p-3 shadow text-sm h-full overflow-y-auto border border-zinc-300">
       <h3 className="text-sm font-semibold mb-2 text-black">
-        {channel === "sms" && "📱 SMS"}
-        {channel === "email" && "📧 Email"}
-        {channel === "slack" && "💬 Slack"}
+        {channel.toLowerCase() === "sms" && "📱 SMS"}
+        {channel.toLowerCase() === "email" && "📧 Email"}
+        {channel.toLowerCase() === "slack" && "💬 Slack"}
       </h3>
 
       {logs.length === 0 ? (

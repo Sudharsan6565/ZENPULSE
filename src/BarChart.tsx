@@ -8,7 +8,14 @@ import {
   CartesianGrid,
 } from "recharts";
 
-export default function NotificationBarChart({ stats }) {
+interface NotificationStats {
+  sms: number;
+  email: number;
+  slack: number;
+  push: number;
+}
+
+export default function NotificationBarChart({ stats }: { stats: NotificationStats }) {
   const data = [
     { name: "SMS", value: stats.sms },
     { name: "Email", value: stats.email },
@@ -18,10 +25,8 @@ export default function NotificationBarChart({ stats }) {
 
   return (
     <div className="w-full mt-4 px-2 py-3 bg-white border rounded shadow-sm text-xs">
-      <h3 className="text-sm font-semibold mb-2 text-gray-800">
-      
-      </h3>
-      <div className="h-48"> {/* This will stop it from growing taller than 200px */}
+      <h3 className="text-sm font-semibold mb-2 text-gray-800">Notifications by Channel</h3>
+      <div className="h-48">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} barCategoryGap="20%">
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -34,7 +39,7 @@ export default function NotificationBarChart({ stats }) {
             />
             <Bar
               dataKey="value"
-              fill="#6366f1" // Indigo-500 Tailwind
+              fill="#6366f1" // Tailwind indigo-500
               radius={[5, 5, 0, 0]}
               barSize={28}
             />
