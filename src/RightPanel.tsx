@@ -1,11 +1,13 @@
-import { useState } from "react";
+
 import LiveChannelFeed from "./LiveChannelFeed";
 import PushBar from "./PushBar";
 import StatsBar from "./StatsBar";
 
-export default function RightPanel() {
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
+interface RightPanelProps {
+  refreshTrigger: number;
+}
 
+export default function RightPanel({ refreshTrigger }: RightPanelProps) {
   const handleCSVExport = () => {
     const pushData = JSON.parse(localStorage.getItem("zenpulse-push-log") || "[]");
     const csvRows = [
@@ -21,7 +23,6 @@ export default function RightPanel() {
 
   return (
     <div className="flex flex-col h-full w-full px-4 py-2 overflow-hidden">
-      {/* Main content with scroll */}
       <div className="flex-grow overflow-y-auto space-y-2">
         <div className="h-[24%]">
           <LiveChannelFeed channel="sms" refreshTrigger={refreshTrigger} />
@@ -37,7 +38,6 @@ export default function RightPanel() {
         </div>
       </div>
 
-      {/* Sticky stats + export row */}
       <div className="flex items-center justify-between border-t pt-2 bg-white sticky bottom-0 z-10">
         <StatsBar />
         <button

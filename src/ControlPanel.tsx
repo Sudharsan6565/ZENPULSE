@@ -2,7 +2,11 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-const ControlPanel = () => {
+interface ControlPanelProps {
+  setRefreshTrigger: (val: number) => void;
+}
+
+const ControlPanel = ({ setRefreshTrigger }: ControlPanelProps) => {
   const [typeClass, setTypeClass] = useState("ecom");
   const [customerCount, setCustomerCount] = useState(1);
   const [channels, setChannels] = useState<string[]>([]);
@@ -37,6 +41,7 @@ const ControlPanel = () => {
         payload
       );
       toast.success("🚀 Pulse Generated");
+      setRefreshTrigger(Date.now()); // 🧠 Trigger refresh
     } catch (err) {
       toast.error("❌ Pulse Generation Failed");
     }

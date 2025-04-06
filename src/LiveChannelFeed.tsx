@@ -1,39 +1,46 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"; // 🧠 Required for state & effect
+
 
 interface LogItem {
   timestamp: string;
   message: string;
 }
 
-export default function LiveChannelFeed({ channel }: { channel: string }) {
+interface LiveChannelFeedProps {
+  channel: string;
+  refreshTrigger: number;
+}
+
+
+export default function LiveChannelFeed({ channel, refreshTrigger }: LiveChannelFeedProps) {
   const [logs, setLogs] = useState<LogItem[]>([]);
 
-  const fetchData = async () => {
-    try {
-      const res = await fetch(
-        `https://0lt1zwvd1g.execute-api.us-east-1.amazonaws.com/prod/zenpulseNotificationGenerator?channel=${channel.toLowerCase()}`
-      );
-      const data = await res.json();
-      const sorted = (data?.items || []).sort(
-        (a: any, b: any) =>
-          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-      );
-      setLogs(sorted.slice(0, 5));
-    } catch (err) {
-      console.error(`❌ Failed to load ${channel} logs`, err);
-    }
-  };
-
   useEffect(() => {
-    fetchData();
-  }, [channel]);
+    const fetchLogs = async () => {
+      try {
+        const res = await fetch(
+          `https://0lt1zwvd1g.execute-api.us-east-1.amazonaws.com/prod/zenpulseNotificationGenerator?channel=${channel}`
+        );
+        const data = await res.json();
+        const sorted = (data?.items || []).sort(
+          (a: any, b: any) =>
+            new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+        );
+        setLogs(sorted.slice(0, 5));
+      } catch (err) {
+        console.error(`❌ Failed to load ${channel} logs`, err);
+      }
+    };
+
+    fetchLogs();
+  }, [channel, refreshTrigger]); // 👈 triggers only when user hits "Generate Pulse"
 
   return (
     <div className="bg-white rounded p-3 shadow text-sm h-full overflow-y-auto border border-zinc-300">
       <h3 className="text-sm font-semibold mb-2 text-black">
-        {channel.toLowerCase() === "sms" && "📱 SMS"}
-        {channel.toLowerCase() === "email" && "📧 Email"}
-        {channel.toLowerCase() === "slack" && "💬 Slack"}
+        {channel === "sms" && "📱 SMS"}
+        {channel === "email" && "📧 Email"}
+        {channel === "slack" && "💬 Slack"}
       </h3>
 
       {logs.length === 0 ? (
