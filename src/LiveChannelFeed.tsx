@@ -32,7 +32,7 @@ export default function LiveChannelFeed({ channel }: { channel: string }) {
 
   return (
     <div className="bg-white rounded p-3 shadow text-sm h-full overflow-y-auto border border-zinc-300">
-      <h3 className="text-base font-semibold mb-2 text-black">
+      <h3 className="text-sm font-semibold mb-2 text-black">
         {channel === "sms" && "📱 SMS"}
         {channel === "email" && "📧 Email"}
         {channel === "slack" && "💬 Slack"}
@@ -44,7 +44,12 @@ export default function LiveChannelFeed({ channel }: { channel: string }) {
         logs.map((log, idx) => (
           <div key={idx} className="mb-3 border-b border-dotted pb-2">
             <div className="text-xs text-gray-500 mb-1">
-              {new Date(log.timestamp).toLocaleTimeString()}
+              {new Date(log.timestamp).toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: true,
+              })}
             </div>
             <p className="text-sm leading-snug text-gray-900 whitespace-pre-wrap">
               {log.message.replace(/["]+/g, "")}
